@@ -37,17 +37,4 @@ public class Lesson extends EntityBase {
 
     @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
     private Test test;
-
-    // Business methods
-    public void assignTest(Test test) {
-        this.test = test;
-        test.setLesson(this);
-    }
-
-    public void removeTest() {
-        if (this.test != null) {
-            this.test.setLesson(null);
-            this.test = null;
-        }
-    }
 }

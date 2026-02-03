@@ -40,12 +40,4 @@ public class CourseService {
         Course saved = courseRepository.save(course);
         return courseMapper.toResponse(saved);
     }
-
-    @Transactional
-    public void publishCourse(UUID id) {
-        Course course = courseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Course not found: " + id));
-        course.setPublished(true);
-        courseRepository.save(course);
-    }
 }

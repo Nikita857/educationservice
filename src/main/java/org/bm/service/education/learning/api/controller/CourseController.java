@@ -34,10 +34,4 @@ public class CourseController {
         CourseResponse created = courseService.createCourse(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
-
-    @PostMapping("/{id}/publish")
-    public ResponseEntity<Void> publishCourse(@PathVariable UUID id) {
-        courseService.publishCourse(id);
-        return ResponseEntity.ok().build();
-    }
 }
