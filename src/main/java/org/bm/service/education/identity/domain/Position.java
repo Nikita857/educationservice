@@ -1,17 +1,17 @@
 package org.bm.service.education.identity.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.bm.service.education.common.base.EntityBase;
 
 @Entity
 @Table(name = "positions", indexes = {
         @Index(name = "idx_positions_code", columnList = "code")
 })
+@Builder
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class Position extends EntityBase {
 

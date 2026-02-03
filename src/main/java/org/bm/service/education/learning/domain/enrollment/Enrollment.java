@@ -1,9 +1,7 @@
 package org.bm.service.education.learning.domain.enrollment;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.bm.service.education.common.base.EntityBase;
 import org.bm.service.education.identity.domain.User;
 import org.bm.service.education.learning.domain.Course;
@@ -18,8 +16,10 @@ import java.time.LocalDateTime;
         @Index(name = "idx_enrollments_course", columnList = "course_id"),
         @Index(name = "idx_enrollments_status", columnList = "status")
 })
+@Builder
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class Enrollment extends EntityBase {
 
@@ -31,6 +31,7 @@ public class Enrollment extends EntityBase {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private EnrollmentStatus status = EnrollmentStatus.ENROLLED;
@@ -40,10 +41,10 @@ public class Enrollment extends EntityBase {
 
     private LocalDateTime completedAt;
 
+    @Builder.Default
     @Column(nullable = false)
     private int progressPercent = 0;
 
-    @PrePersist
     @Override
     protected void onCreate() {
         super.onCreate();

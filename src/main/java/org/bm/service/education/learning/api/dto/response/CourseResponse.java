@@ -1,4 +1,4 @@
-package org.bm.service.education.learning.api.dto;
+package org.bm.service.education.learning.api.dto.response;
 
 import java.util.UUID;
 

@@ -1,9 +1,7 @@
 package org.bm.service.education.learning.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.bm.service.education.common.base.EntityBase;
 import org.bm.service.education.identity.domain.User;
 
@@ -15,8 +13,10 @@ import java.util.List;
         @Index(name = "idx_courses_author", columnList = "author_id"),
         @Index(name = "idx_courses_published", columnList = "isPublished")
 })
+@Builder
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class Course extends EntityBase {
 
@@ -28,6 +28,7 @@ public class Course extends EntityBase {
 
     private String thumbnailUrl;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean isPublished = false;
 
@@ -37,6 +38,7 @@ public class Course extends EntityBase {
     @JoinColumn(name = "author_id")
     private User author;
 
+    @Builder.Default
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("orderIndex ASC")
     private List<Module> modules = new ArrayList<>();

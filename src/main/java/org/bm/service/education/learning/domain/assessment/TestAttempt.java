@@ -1,9 +1,7 @@
 package org.bm.service.education.learning.domain.assessment;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.bm.service.education.common.base.EntityBase;
 import org.bm.service.education.identity.domain.User;
 
@@ -15,8 +13,10 @@ import java.time.LocalDateTime;
         @Index(name = "idx_test_attempts_test", columnList = "test_id"),
         @Index(name = "idx_test_attempts_user_test", columnList = "user_id, test_id")
 })
+@Builder
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class TestAttempt extends EntityBase {
 
@@ -35,6 +35,7 @@ public class TestAttempt extends EntityBase {
 
     private Integer score;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean isPassed = false;
 }

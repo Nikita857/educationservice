@@ -1,9 +1,7 @@
 package org.bm.service.education.learning.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.bm.service.education.common.base.EntityBase;
 import org.bm.service.education.learning.domain.assessment.Test;
 
@@ -11,8 +9,10 @@ import org.bm.service.education.learning.domain.assessment.Test;
 @Table(name = "lessons", indexes = {
         @Index(name = "idx_lessons_module", columnList = "module_id")
 })
+@Builder
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class Lesson extends EntityBase {
 

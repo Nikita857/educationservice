@@ -1,9 +1,7 @@
 package org.bm.service.education.identity.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.bm.service.education.common.base.EntityBase;
 
 import java.util.ArrayList;
@@ -14,8 +12,10 @@ import java.util.List;
         @Index(name = "idx_org_units_code", columnList = "code"),
         @Index(name = "idx_org_units_parent", columnList = "parent_id")
 })
+@Builder
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class OrganizationUnit extends EntityBase {
 
@@ -29,6 +29,7 @@ public class OrganizationUnit extends EntityBase {
     @JoinColumn(name = "parent_id")
     private OrganizationUnit parent;
 
+    @Builder.Default
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<OrganizationUnit> children = new ArrayList<>();
 }

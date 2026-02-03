@@ -1,9 +1,7 @@
 package org.bm.service.education.compliance.domain.record;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.bm.service.education.common.base.EntityBase;
 import org.bm.service.education.compliance.domain.requirement.TrainingRequirement;
 import org.bm.service.education.identity.domain.User;
@@ -18,8 +16,10 @@ import java.time.LocalDateTime;
         @Index(name = "idx_compliance_records_status", columnList = "status"),
         @Index(name = "idx_compliance_records_expires_at", columnList = "expiresAt")
 })
+@Builder
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class ComplianceRecord extends EntityBase {
 
@@ -31,6 +31,7 @@ public class ComplianceRecord extends EntityBase {
     @JoinColumn(name = "requirement_id", nullable = false)
     private TrainingRequirement requirement;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ComplianceStatus status = ComplianceStatus.PENDING;

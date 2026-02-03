@@ -1,9 +1,7 @@
 package org.bm.service.education.learning.domain.assessment;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.bm.service.education.common.base.EntityBase;
 
 import java.util.ArrayList;
@@ -13,8 +11,10 @@ import java.util.List;
 @Table(name = "questions", indexes = {
         @Index(name = "idx_questions_test", columnList = "test_id")
 })
+@Builder
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class Question extends EntityBase {
 
@@ -24,6 +24,7 @@ public class Question extends EntityBase {
     @Column(nullable = false)
     private int orderIndex;
 
+    @Builder.Default
     @Column(nullable = false)
     private int points = 1;
 
@@ -31,6 +32,7 @@ public class Question extends EntityBase {
     @JoinColumn(name = "test_id", nullable = false)
     private Test test;
 
+    @Builder.Default
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("orderIndex ASC")
     private List<AnswerOption> answerOptions = new ArrayList<>();

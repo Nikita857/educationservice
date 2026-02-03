@@ -1,9 +1,7 @@
 package org.bm.service.education.learning.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.bm.service.education.common.base.EntityBase;
 
 import java.util.ArrayList;
@@ -13,8 +11,10 @@ import java.util.List;
 @Table(name = "modules", indexes = {
         @Index(name = "idx_modules_course", columnList = "course_id")
 })
+@Builder
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class Module extends EntityBase {
 
@@ -31,6 +31,7 @@ public class Module extends EntityBase {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
+    @Builder.Default
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("orderIndex ASC")
     private List<Lesson> lessons = new ArrayList<>();

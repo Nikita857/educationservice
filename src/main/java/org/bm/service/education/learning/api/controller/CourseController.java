@@ -1,9 +1,9 @@
-package org.bm.service.education.learning.api;
+package org.bm.service.education.learning.api.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.bm.service.education.learning.api.dto.CourseResponse;
-import org.bm.service.education.learning.api.dto.CreateCourseRequest;
+import org.bm.service.education.learning.api.dto.response.CourseResponse;
+import org.bm.service.education.learning.api.dto.request.CreateCourseRequest;
 import org.bm.service.education.learning.application.CourseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/courses")
+@RequestMapping("api/v1/course")
 @RequiredArgsConstructor
 public class CourseController {
 

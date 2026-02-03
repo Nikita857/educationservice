@@ -1,9 +1,7 @@
 package org.bm.service.education.learning.domain.progress;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.bm.service.education.common.base.EntityBase;
 import org.bm.service.education.learning.domain.Lesson;
 import org.bm.service.education.learning.domain.enrollment.Enrollment;
@@ -17,8 +15,10 @@ import java.time.LocalDateTime;
         @Index(name = "idx_lesson_progress_enrollment", columnList = "enrollment_id"),
         @Index(name = "idx_lesson_progress_lesson", columnList = "lesson_id")
 })
+@Builder
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class LessonProgress extends EntityBase {
 
@@ -30,6 +30,7 @@ public class LessonProgress extends EntityBase {
     @JoinColumn(name = "lesson_id", nullable = false)
     private Lesson lesson;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean isCompleted = false;
 

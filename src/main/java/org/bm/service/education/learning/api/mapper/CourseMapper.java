@@ -1,7 +1,7 @@
 package org.bm.service.education.learning.api.mapper;
 
-import org.bm.service.education.learning.api.dto.CourseResponse;
-import org.bm.service.education.learning.api.dto.CreateCourseRequest;
+import org.bm.service.education.learning.api.dto.response.CourseResponse;
+import org.bm.service.education.learning.api.dto.request.CreateCourseRequest;
 import org.bm.service.education.learning.domain.Course;
 import org.springframework.stereotype.Component;
 

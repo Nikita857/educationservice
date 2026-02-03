@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: educationservice
+
+app:
+  cors:
+    allowed-origins: http://localhost:3000

@@ -1,9 +1,7 @@
 package org.bm.service.education.compliance.domain.requirement;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.bm.service.education.common.base.EntityBase;
 import org.bm.service.education.identity.domain.OrganizationUnit;
 import org.bm.service.education.identity.domain.Position;
@@ -16,8 +14,10 @@ import org.bm.service.education.learning.domain.Course;
         @Index(name = "idx_training_req_position", columnList = "target_position_id"),
         @Index(name = "idx_training_req_org_unit", columnList = "target_organization_unit_id")
 })
+@Builder
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class TrainingRequirement extends EntityBase {
 
@@ -45,6 +45,7 @@ public class TrainingRequirement extends EntityBase {
 
     private Integer validityPeriodDays;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean isMandatory = true;
 }

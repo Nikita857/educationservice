@@ -1,23 +1,24 @@
 package org.bm.service.education.learning.domain.assessment;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.bm.service.education.common.base.EntityBase;
 
 @Entity
 @Table(name = "answer_options", indexes = {
         @Index(name = "idx_answer_options_question", columnList = "question_id")
 })
+@Builder
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class AnswerOption extends EntityBase {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String text;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean isCorrect = false;
 

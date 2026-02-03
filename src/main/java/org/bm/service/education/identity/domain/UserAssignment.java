@@ -1,9 +1,7 @@
 package org.bm.service.education.identity.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.bm.service.education.common.base.EntityBase;
 
 import java.time.LocalDate;
@@ -14,8 +12,10 @@ import java.time.LocalDate;
         @Index(name = "idx_user_assignments_position", columnList = "position_id"),
         @Index(name = "idx_user_assignments_org_unit", columnList = "organization_unit_id")
 })
+@Builder
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class UserAssignment extends EntityBase {
 
@@ -36,6 +36,7 @@ public class UserAssignment extends EntityBase {
 
     private LocalDate endDate;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean isPrimary = true;
 }
