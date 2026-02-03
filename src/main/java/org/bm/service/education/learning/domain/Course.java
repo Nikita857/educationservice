@@ -15,23 +15,26 @@ import java.util.List;
 })
 @Builder
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Course extends EntityBase {
 
+    @Setter
     @Column(nullable = false)
     private String title;
 
+    @Setter
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Setter
     private String thumbnailUrl;
 
     @Builder.Default
     @Column(nullable = false)
     private boolean isPublished = false;
 
+    @Setter
     private Integer estimatedDurationMinutes;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,4 +45,23 @@ public class Course extends EntityBase {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("orderIndex ASC")
     private List<Module> modules = new ArrayList<>();
+
+    // Business methods
+    public void publish() {
+        this.isPublished = true;
+    }
+
+    public void unpublish() {
+        this.isPublished = false;
+    }
+
+    public void addModule(Module module) {
+        modules.add(module);
+        module.setCourse(this);
+    }
+
+    public void removeModule(Module module) {
+        modules.remove(module);
+        module.setCourse(null);
+    }
 }

@@ -13,20 +13,23 @@ import java.util.List;
 })
 @Builder
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Module extends EntityBase {
 
+    @Setter
     @Column(nullable = false)
     private String title;
 
+    @Setter
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Setter
     @Column(nullable = false)
     private int orderIndex;
 
+    @Setter(AccessLevel.PACKAGE)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
@@ -35,4 +38,15 @@ public class Module extends EntityBase {
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("orderIndex ASC")
     private List<Lesson> lessons = new ArrayList<>();
+
+    // Business methods
+    public void addLesson(Lesson lesson) {
+        lessons.add(lesson);
+        lesson.setModule(this);
+    }
+
+    public void removeLesson(Lesson lesson) {
+        lessons.remove(lesson);
+        lesson.setModule(null);
+    }
 }

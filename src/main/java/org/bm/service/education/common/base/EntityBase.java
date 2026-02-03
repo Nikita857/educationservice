@@ -2,7 +2,6 @@ package org.bm.service.education.common.base;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.io.Serializable;
@@ -12,7 +11,6 @@ import java.util.UUID;
 
 @MappedSuperclass
 @Getter
-@Setter
 public abstract class EntityBase implements Serializable {
 
     @Id

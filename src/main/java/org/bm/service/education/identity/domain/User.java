@@ -5,6 +5,7 @@ import lombok.*;
 import org.bm.service.education.common.base.EntityBase;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -19,24 +20,27 @@ import java.util.List;
 })
 @Builder
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class User extends EntityBase implements UserDetails {
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
+    @Setter
     @Column(nullable = false)
     private String firstName;
 
+    @Setter
     @Column(nullable = false)
     private String lastName;
 
+    @Setter
     private String middleName;
 
+    @Builder.Default
     @Column(name = "active", nullable = false)
-    private boolean isActive;
+    private boolean isActive = true;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -60,38 +64,67 @@ public class User extends EntityBase implements UserDetails {
     @JoinColumn(name = "current_assignment_id")
     private UserAssignment currentAssignment;
 
+    // Business methods
+    public void activate() {
+        this.isActive = true;
+        this.status = UserStatus.ACTIVE;
+    }
+
+    public void deactivate() {
+        this.isActive = false;
+        this.status = UserStatus.INACTIVE;
+    }
+
+    public void suspend() {
+        this.isActive = false;
+        this.status = UserStatus.SUSPENDED;
+    }
+
+    public void changePassword(String newPasswordHash) {
+        this.passwordHash = newPasswordHash;
+    }
+
+    public void assignTo(UserAssignment assignment) {
+        this.currentAssignment = assignment;
+    }
+
+    public void changeRole(UserRole newRole) {
+        this.role = newRole;
+    }
+
+    // UserDetails implementation
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override
     public @Nullable String getPassword() {
-        return "";
+        return passwordHash;
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return username;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return status != UserStatus.SUSPENDED;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return isActive && status == UserStatus.ACTIVE;
     }
 }

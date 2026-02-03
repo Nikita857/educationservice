@@ -10,21 +10,24 @@ import org.bm.service.education.common.base.EntityBase;
 })
 @Builder
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class AnswerOption extends EntityBase {
 
+    @Setter
     @Column(nullable = false, columnDefinition = "TEXT")
     private String text;
 
+    @Setter
     @Builder.Default
     @Column(nullable = false)
     private boolean isCorrect = false;
 
+    @Setter
     @Column(nullable = false)
     private int orderIndex;
 
+    @Setter(AccessLevel.PACKAGE)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;

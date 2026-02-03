@@ -10,29 +10,34 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "lesson_progress", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "enrollment_id", "lesson_id" })
+                @UniqueConstraint(columnNames = { "enrollment_id", "lesson_id" })
 }, indexes = {
-        @Index(name = "idx_lesson_progress_enrollment", columnList = "enrollment_id"),
-        @Index(name = "idx_lesson_progress_lesson", columnList = "lesson_id")
+                @Index(name = "idx_lesson_progress_enrollment", columnList = "enrollment_id"),
+                @Index(name = "idx_lesson_progress_lesson", columnList = "lesson_id")
 })
 @Builder
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class LessonProgress extends EntityBase {
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "enrollment_id", nullable = false)
-    private Enrollment enrollment;
+        @ManyToOne(fetch = FetchType.LAZY, optional = false)
+        @JoinColumn(name = "enrollment_id", nullable = false)
+        private Enrollment enrollment;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "lesson_id", nullable = false)
-    private Lesson lesson;
+        @ManyToOne(fetch = FetchType.LAZY, optional = false)
+        @JoinColumn(name = "lesson_id", nullable = false)
+        private Lesson lesson;
 
-    @Builder.Default
-    @Column(nullable = false)
-    private boolean isCompleted = false;
+        @Builder.Default
+        @Column(nullable = false)
+        private boolean isCompleted = false;
 
-    private LocalDateTime completedAt;
+        private LocalDateTime completedAt;
+
+        // Business methods
+        public void markCompleted() {
+                this.isCompleted = true;
+                this.completedAt = LocalDateTime.now();
+        }
 }

@@ -13,21 +13,24 @@ import java.util.List;
 })
 @Builder
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Question extends EntityBase {
 
+    @Setter
     @Column(nullable = false, columnDefinition = "TEXT")
     private String text;
 
+    @Setter
     @Column(nullable = false)
     private int orderIndex;
 
+    @Setter
     @Builder.Default
     @Column(nullable = false)
     private int points = 1;
 
+    @Setter(AccessLevel.PACKAGE)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "test_id", nullable = false)
     private Test test;
@@ -36,4 +39,15 @@ public class Question extends EntityBase {
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("orderIndex ASC")
     private List<AnswerOption> answerOptions = new ArrayList<>();
+
+    // Business methods
+    public void addAnswerOption(AnswerOption option) {
+        answerOptions.add(option);
+        option.setQuestion(this);
+    }
+
+    public void removeAnswerOption(AnswerOption option) {
+        answerOptions.remove(option);
+        option.setQuestion(null);
+    }
 }

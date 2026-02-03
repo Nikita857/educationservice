@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 })
 @Builder
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class TestAttempt extends EntityBase {
@@ -38,4 +37,11 @@ public class TestAttempt extends EntityBase {
     @Builder.Default
     @Column(nullable = false)
     private boolean isPassed = false;
+
+    // Business methods
+    public void finish(int score, int passingScore) {
+        this.finishedAt = LocalDateTime.now();
+        this.score = score;
+        this.isPassed = score >= passingScore;
+    }
 }

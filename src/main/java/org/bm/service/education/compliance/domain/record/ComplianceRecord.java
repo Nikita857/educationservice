@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 })
 @Builder
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ComplianceRecord extends EntityBase {
@@ -43,4 +42,26 @@ public class ComplianceRecord extends EntityBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "enrollment_id")
     private Enrollment enrollment;
+
+    // Business methods
+    public void startProgress(Enrollment enrollment) {
+        this.status = ComplianceStatus.IN_PROGRESS;
+        this.enrollment = enrollment;
+    }
+
+    public void markCompliant(Integer validityDays) {
+        this.status = ComplianceStatus.COMPLIANT;
+        this.completedAt = LocalDateTime.now();
+        if (validityDays != null) {
+            this.expiresAt = this.completedAt.plusDays(validityDays);
+        }
+    }
+
+    public void markOverdue() {
+        this.status = ComplianceStatus.OVERDUE;
+    }
+
+    public void markExpired() {
+        this.status = ComplianceStatus.EXPIRED;
+    }
 }

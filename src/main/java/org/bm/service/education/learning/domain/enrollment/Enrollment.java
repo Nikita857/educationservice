@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 })
 @Builder
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Enrollment extends EntityBase {
@@ -51,5 +50,29 @@ public class Enrollment extends EntityBase {
         if (enrolledAt == null) {
             enrolledAt = LocalDateTime.now();
         }
+    }
+
+    // Business methods
+    public void startProgress() {
+        if (this.status == EnrollmentStatus.ENROLLED) {
+            this.status = EnrollmentStatus.IN_PROGRESS;
+        }
+    }
+
+    public void updateProgress(int percent) {
+        this.progressPercent = Math.min(100, Math.max(0, percent));
+        if (this.progressPercent == 100) {
+            complete();
+        }
+    }
+
+    public void complete() {
+        this.status = EnrollmentStatus.COMPLETED;
+        this.completedAt = LocalDateTime.now();
+        this.progressPercent = 100;
+    }
+
+    public void drop() {
+        this.status = EnrollmentStatus.DROPPED;
     }
 }
