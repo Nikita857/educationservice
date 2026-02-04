@@ -55,7 +55,14 @@ public class SecurityConfig {
                                                                 .maxAgeInSeconds(31536000)
                                                                 .includeSubDomains(true)))
                                 .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers("/api/v1/auth/**").permitAll()
+                                                .requestMatchers(
+                                                                "/api/v1/auth/**",
+                                                                "/api-client",
+                                                                "/api-client/**",
+                                                                "/api-json",
+                                                                "/api-json/**",
+                                                                "/swagger-ui/**")
+                                                .permitAll()
                                                 .anyRequest().authenticated())
                                 .logout(AbstractHttpConfigurer::disable)
                                 .sessionManagement(session -> session

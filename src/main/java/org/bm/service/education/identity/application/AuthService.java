@@ -4,15 +4,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bm.service.education.common.security.jwt.service.JwtService;
 import org.bm.service.education.identity.api.dto.request.LoginRequest;
+import org.bm.service.education.identity.api.dto.request.RegisterRequest;
 import org.bm.service.education.identity.api.dto.request.RefreshTokenRequest;
 import org.bm.service.education.identity.api.dto.response.AuthResponse;
 import org.bm.service.education.identity.domain.User;
+import org.bm.service.education.identity.domain.UserRole;
+import org.bm.service.education.identity.domain.UserStatus;
 import org.bm.service.education.identity.infrastructure.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +29,36 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    @Transactional
+    public AuthResponse register(RegisterRequest request) {
+        if (userRepository.existsByUsername(request.username())) {
+            throw new BadCredentialsException("Пользователь с таким именем уже существует");
+        }
+        if (userRepository.existsByEmail(request.email())) {
+            throw new BadCredentialsException("Пользователь с таким email уже существует");
+        }
+        if (userRepository.existsByPersonnelNumber(request.personnelNumber())) {
+            throw new BadCredentialsException("Пользователь с таким табельным номером уже существует");
+        }
+
+        User user = User.builder()
+                .username(request.username())
+                .email(request.email())
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .middleName(request.middleName())
+                .personnelNumber(request.personnelNumber())
+                .passwordHash(passwordEncoder.encode(request.password()))
+                .role(UserRole.EMPLOYEE)
+                .status(UserStatus.ACTIVE)
+                .isActive(true)
+                .build();
+
+        User savedUser = userRepository.save(user);
+        return buildAuthResponse(savedUser);
+    }
 
     public AuthResponse login(LoginRequest request) {
         try {
@@ -82,6 +116,6 @@ public class AuthService {
                 .role(user.getRole().name())
                 .build();
 
-        return AuthResponse.of(accessToken, refreshToken, jwtService.getJwtExpirationHours(), userInfo);
+        return AuthResponse.of(accessToken, refreshToken, userInfo);
     }
 }

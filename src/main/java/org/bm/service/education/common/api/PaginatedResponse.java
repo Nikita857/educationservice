@@ -3,6 +3,7 @@ package org.bm.service.education.common.api;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.data.domain.Page;
 
 import java.time.Instant;
 import java.util.List;
@@ -70,6 +71,23 @@ public class PaginatedResponse<T> {
                 .totalPages(totalPages)
                 .hasNext(page < totalPages - 1)
                 .hasPrevious(page > 0)
+                .build();
+    }
+
+    public static <T> PaginatedResponse<T> of(Page<T> pageData, String path) {
+        return PaginatedResponse.<T>builder()
+                .requestTimestamp(Instant.now())
+                .responseTimestamp(Instant.now())
+                .path(path)
+                .status(200)
+                .success(true)
+                .data(pageData.getContent())
+                .page(pageData.getNumber())
+                .size(pageData.getSize())
+                .totalElements(pageData.getTotalElements())
+                .totalPages(pageData.getTotalPages())
+                .hasNext(pageData.hasNext())
+                .hasPrevious(pageData.hasPrevious())
                 .build();
     }
 }

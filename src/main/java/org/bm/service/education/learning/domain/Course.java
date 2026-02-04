@@ -37,6 +37,7 @@ public class Course extends EntityBase {
     @Setter
     private Integer estimatedDurationMinutes;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     private User author;

@@ -2,6 +2,7 @@ package org.bm.service.education.learning.api.mapper;
 
 import org.bm.service.education.learning.api.dto.response.CourseResponse;
 import org.bm.service.education.learning.api.dto.request.CreateCourseRequest;
+import org.bm.service.education.learning.api.dto.request.UpdateCourseRequest;
 import org.bm.service.education.learning.domain.Course;
 import org.springframework.stereotype.Component;
 
@@ -30,5 +31,20 @@ public class CourseMapper {
         course.setThumbnailUrl(request.thumbnailUrl());
         course.setEstimatedDurationMinutes(request.estimatedDurationMinutes());
         return course;
+    }
+
+    public void updateEntity(Course course, UpdateCourseRequest request) {
+        if (request.title() != null) {
+            course.setTitle(request.title());
+        }
+        if (request.description() != null) {
+            course.setDescription(request.description());
+        }
+        if (request.thumbnailUrl() != null) {
+            course.setThumbnailUrl(request.thumbnailUrl());
+        }
+        if (request.estimatedDurationMinutes() != null) {
+            course.setEstimatedDurationMinutes(request.estimatedDurationMinutes());
+        }
     }
 }

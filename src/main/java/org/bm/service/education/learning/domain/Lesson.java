@@ -27,6 +27,21 @@ public class Lesson extends EntityBase {
     private String videoUrl;
 
     @Setter
+    private String externalUrl;
+
+    @Setter
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private LessonType lessonType = LessonType.LECTURE;
+
+    @Setter
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private LessonCompletionType completionType = LessonCompletionType.READ;
+
+    @Setter
     @Column(nullable = false)
     private int orderIndex;
 
@@ -37,4 +52,13 @@ public class Lesson extends EntityBase {
 
     @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
     private Test test;
+
+    // Helper methods
+    public boolean requiresTest() {
+        return completionType == LessonCompletionType.TEST;
+    }
+
+    public boolean requiresScreenshot() {
+        return completionType == LessonCompletionType.SCREENSHOT;
+    }
 }

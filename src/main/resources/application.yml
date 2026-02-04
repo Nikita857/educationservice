@@ -3,10 +3,14 @@ spring:
     name: education-service
 
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/education_db}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/education}
     username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:2w3a236fdj!}
+    password: ${DB_PASSWORD:123456789}
     driver-class-name: org.postgresql.Driver
+
+  flyway:
+    locations: classpath:db/migration,classpath:db/seed
+    baseline-on-migrate: true
 
   jpa:
     hibernate:
@@ -26,12 +30,28 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
 
+# OpenAPI & Swagger Configuration
+springdoc:
+  swagger-ui:
+    path: /api-client
+  api-docs:
+    path: /api-json
+
 # JWT Configuration
 jwt:
-  secret: ${JWT_SECRET:5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437} # Минимум 256 бит для HS256
-  expiration: 24 # Часы
-  refresh-expiration: 168 # 7 дней
+  secret: ${JWT_SECRET:5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437}
+  expiration: 24
+  refresh-expiration: 168
   clock-skew-seconds: 60
+
+# MinIO Configuration
+minio:
+  endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
+  access-key: ${MINIO_ACCESS_KEY:minioadmin}
+  secret-key: ${MINIO_SECRET_KEY:minioadmin123}
+  video-bucket: ${MINIO_VIDEO_BUCKET:education}
+  attachment-bucket: ${MINIO_ATTACHMENT_BUCKET:education}
+  image-bucket: ${MINIO_IMAGE_BUCKET:education}
 
 # Application Custom Properies
 app:

@@ -1,17 +1,36 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.flywaydb:flyway-database-postgresql:11.19.1'
+        classpath 'org.postgresql:postgresql:42.7.2'
+    }
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '4.0.2'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.flywaydb.flyway' version '11.19.1'
 }
 
 group = 'org.bm.service.education'
 version = '0.0.1-SNAPSHOT'
-description = 'Demo project for Spring Boot'
+description = 'Education Platform API'
 
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
 	}
+}
+
+flyway {
+    url = 'jdbc:postgresql://localhost:5432/education'
+    user = 'postgres'
+    password = '123456789'
+    locations = ["filesystem:${project.projectDir}/src/main/resources/db/migration"]
+    cleanDisabled = false
 }
 
 configurations {
@@ -74,6 +93,9 @@ dependencies {
 	testImplementation "org.testcontainers:testcontainers:2.0.2"
 
 	testImplementation "org.testcontainers:testcontainers-junit-jupiter:2.0.2"
+
+	// MinIO SDK
+	implementation "io.minio:minio:8.6.0"
 }
 
 tasks.named('test') {
