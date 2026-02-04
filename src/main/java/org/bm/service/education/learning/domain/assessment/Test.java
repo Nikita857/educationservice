@@ -44,17 +44,17 @@ public class Test extends EntityBase {
     private int maxAttempts = 0;
 
     // XOR: только одна связь должна быть заполнена
-    @Setter(AccessLevel.PACKAGE)
+    @Setter
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;
 
-    @Setter(AccessLevel.PACKAGE)
+    @Setter
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "module_id")
     private Module module;
 
-    @Setter(AccessLevel.PACKAGE)
+    @Setter
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;

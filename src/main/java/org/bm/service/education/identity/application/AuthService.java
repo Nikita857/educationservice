@@ -83,7 +83,13 @@ public class AuthService {
 
     public AuthResponse refresh(RefreshTokenRequest request) {
         String refreshToken = request.refreshToken();
-        String username = jwtService.extractUsername(refreshToken);
+
+        String username;
+        try {
+            username = jwtService.extractUsername(refreshToken);
+        } catch (Exception e) {
+            throw new BadCredentialsException("Invalid or malformed refresh token");
+        }
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new BadCredentialsException("User not found"));

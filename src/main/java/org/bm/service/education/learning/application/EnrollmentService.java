@@ -77,20 +77,44 @@ public class EnrollmentService {
         Lesson lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Урок", lessonId));
 
+        // Проверяем способ закрытия урока
+        switch (lesson.getCompletionType()) {
+            case TEST -> throw new IllegalStateException(
+                    "Этот урок закрывается после прохождения теста");
+            case SCREENSHOT -> throw new IllegalStateException(
+                    "Этот урок закрывается после одобрения скриншота подтверждения");
+            case READ -> {
+                // OK, можно отметить вручную
+            }
+        }
+
         UUID courseId = lesson.getModule().getCourse().getId();
         Enrollment enrollment = enrollmentRepository.findByUserIdAndCourseId(user.getId(), courseId)
                 .orElseThrow(() -> new IllegalStateException("Вы не записаны на этот курс"));
 
+        return completeLessonInternal(enrollment, lesson);
+    }
+
+    /**
+     * Внутренний метод для завершения урока (вызывается из TestService и
+     * ScreenshotService)
+     */
+    @Transactional
+    public LessonProgressResponse completeLessonInternal(Enrollment enrollment, Lesson lesson) {
         // Начинаем прогресс если только что записались
         enrollment.startProgress();
 
         // Ищем или создаем прогресс урока
         LessonProgress progress = lessonProgressRepository
-                .findByEnrollmentIdAndLessonId(enrollment.getId(), lessonId)
+                .findByEnrollmentIdAndLessonId(enrollment.getId(), lesson.getId())
                 .orElseGet(() -> LessonProgress.builder()
                         .enrollment(enrollment)
                         .lesson(lesson)
                         .build());
+
+        if (progress.isCompleted()) {
+            return toProgressResponse(progress);
+        }
 
         progress.markCompleted();
         lessonProgressRepository.save(progress);

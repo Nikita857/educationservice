@@ -5,7 +5,11 @@ import org.bm.service.education.common.exception.ResourceNotFoundException;
 import org.bm.service.education.identity.domain.User;
 import org.bm.service.education.learning.api.dto.request.SubmitTestRequest;
 import org.bm.service.education.learning.api.dto.response.*;
+import org.bm.service.education.learning.domain.Lesson;
+import org.bm.service.education.learning.domain.LessonCompletionType;
 import org.bm.service.education.learning.domain.assessment.*;
+import org.bm.service.education.learning.domain.enrollment.Enrollment;
+import org.bm.service.education.learning.infrastructure.EnrollmentRepository;
 import org.bm.service.education.learning.infrastructure.TestAttemptRepository;
 import org.bm.service.education.learning.infrastructure.TestRepository;
 import org.springframework.stereotype.Service;
@@ -24,6 +28,8 @@ public class TestService {
 
     private final TestRepository testRepository;
     private final TestAttemptRepository attemptRepository;
+    private final EnrollmentRepository enrollmentRepository;
+    private final EnrollmentService enrollmentService;
 
     // === Получение информации о тесте ===
 
@@ -134,6 +140,21 @@ public class TestService {
         int score = totalPoints > 0 ? (earnedPoints * 100) / totalPoints : 0;
         attempt.finish(score, test.getPassingScore());
         attemptRepository.save(attempt);
+
+        // Если тест пройден успешно и привязан к уроку с completionType = TEST,
+        // отмечаем урок
+        if (attempt.isPassed() && test.getLesson() != null) {
+            Lesson lesson = test.getLesson();
+            if (lesson.getCompletionType() == LessonCompletionType.TEST) {
+                UUID courseId = lesson.getModule().getCourse().getId();
+                Enrollment enrollment = enrollmentRepository.findByUserIdAndCourseId(user.getId(), courseId)
+                        .orElse(null);
+
+                if (enrollment != null) {
+                    enrollmentService.completeLessonInternal(enrollment, lesson);
+                }
+            }
+        }
 
         return toAttemptResponse(attempt);
     }

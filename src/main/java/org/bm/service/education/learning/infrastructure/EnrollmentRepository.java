@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,6 +24,8 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, UUID> {
     Page<Enrollment> findByUserIdAndStatus(UUID userId, EnrollmentStatus status, Pageable pageable);
 
     Page<Enrollment> findByCourseId(UUID courseId, Pageable pageable);
+
+    List<Enrollment> findByCourseId(UUID courseId);
 
     @Query("SELECT COUNT(e) FROM Enrollment e WHERE e.course.id = :courseId AND e.status = :status")
     long countByCourseIdAndStatus(UUID courseId, EnrollmentStatus status);

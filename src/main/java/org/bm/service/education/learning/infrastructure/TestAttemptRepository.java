@@ -21,8 +21,23 @@ public interface TestAttemptRepository extends JpaRepository<TestAttempt, UUID> 
 
     Page<TestAttempt> findByUserId(UUID userId, Pageable pageable);
 
+    List<TestAttempt> findByUserId(UUID userId);
+
     Optional<TestAttempt> findByUserIdAndTestIdAndFinishedAtIsNull(UUID userId, UUID testId);
 
     @Query("SELECT ta FROM TestAttempt ta WHERE ta.user.id = :userId AND ta.test.id = :testId AND ta.isPassed = true")
     List<TestAttempt> findPassedAttempts(UUID userId, UUID testId);
+
+    List<TestAttempt> findByTestId(UUID testId);
+
+    @Query("SELECT ta FROM TestAttempt ta " +
+            "JOIN ta.test t " +
+            "LEFT JOIN t.lesson l " +
+            "LEFT JOIN l.module m " +
+            "LEFT JOIN t.module tm " +
+            "LEFT JOIN t.course tc " +
+            "WHERE COALESCE(m.course.id, tm.course.id, tc.id) = :courseId")
+    List<TestAttempt> findByCourseId(UUID courseId);
+
+    Optional<TestAttempt> findTopByUserIdAndTestIdOrderByFinishedAtDesc(UUID userId, UUID testId);
 }
